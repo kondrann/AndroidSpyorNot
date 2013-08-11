@@ -10,14 +10,23 @@
         android:id="@+id/main_game_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="@string/main_game_title"
         android:textColor="#FFFFFF"
-        android:textSize="16sp" />
+        android:textSize="36sp" />
 
-    <Button
-        android:id="@+id/next_audio_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/next" />
+    <ImageView
+        android:id="@+id/bus"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@drawable/bus" />
+
+    <ImageView
+        android:id="@+id/is_or_is_not_a_spy"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@drawable/sidemeter" />
 
 </LinearLayout>

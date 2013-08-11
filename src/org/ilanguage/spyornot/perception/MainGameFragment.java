@@ -6,19 +6,25 @@ import java.util.Random;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class MainGameFragment extends Fragment {
 
 	private ArrayList<Integer> mAudioIds;
 	private int audioIndex;
-	private int maxNumberOfStimuliPerGroup = 5;
+	private int maxNumberOfStimuliPerGroup = 1;
 	private int numberOfGroups = 3;
 	MediaPlayer mPlayer;
 
@@ -27,21 +33,59 @@ public class MainGameFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_main_game, container,
 				false);
 
-		Button button = (Button) view.findViewById(R.id.next_audio_button);
-		button.setOnClickListener(new View.OnClickListener() {
+		// Set sideBar menu properties if in view
+		MainMenuFragment mainMenuFragment = (MainMenuFragment) getFragmentManager()
+				.findFragmentById(R.id.main_menu_fragment);
+		if (mainMenuFragment.isInLayout()) {
+			TextView step1 = (TextView) mainMenuFragment.getView()
+					.findViewById(R.id.menu_step1);
+			TextView step2 = (TextView) mainMenuFragment.getView()
+					.findViewById(R.id.menu_step2);
+			TextView step3 = (TextView) mainMenuFragment.getView()
+					.findViewById(R.id.menu_step3);
+			step1.setTextColor(Color.parseColor("#FFFFFF"));
+			step2.setTextColor(Color.parseColor("#F5DC49"));
+			step3.setTextColor(Color.parseColor("#FFFFFF"));
+		}
 
+		ImageView isOrIsNotASpy = (ImageView) view
+				.findViewById(R.id.is_or_is_not_a_spy);
+
+		isOrIsNotASpy.setOnTouchListener(new OnTouchListener() {
 			@Override
-			public void onClick(View view) {
-				playNextAudio();
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+					String speakerBackground = getResources().getResourceName(
+							mAudioIds.get(audioIndex));
+					if (speakerBackground.indexOf("russian") > -1) {
+						Log.v("TEST", "SPY!");
+					} else {
+						Log.v("TEST", "NOT a spy!");
+					}
+
+					int x = (int) event.getX();
+					int y = (int) event.getY();
+
+					Log.v("TEST: ", "x: " + x + ", y: " + y);
+
+					playNextAudio();
+
+					return true;
+				}
+				return false;
 			}
 		});
 
 		// Play first audio file on initial load; do not replay audio file on
 		// orientation change, but keep audio index and initially randomized
-		// audio files
+		// audio files, as well as re-initializing the MediaPlayer so it is not
+		// null
 		if (savedInstanceState != null) {
 			audioIndex = savedInstanceState.getInt("audioIndex");
 			mAudioIds = savedInstanceState.getIntegerArrayList("mAudioIds");
+			mPlayer = MediaPlayer.create(view.getContext(),
+					mAudioIds.get(audioIndex));
 		} else {
 			audioIndex = 0;
 			mAudioIds = initializeRandomizedAudioStimuli();
@@ -98,12 +142,13 @@ public class MainGameFragment extends Fragment {
 	}
 
 	public void playNextAudio() {
-		audioIndex++;
-		if (audioIndex >= (maxNumberOfStimuliPerGroup * numberOfGroups)) {
+		// Do not allow user to go to next sound file until current sound file
+		// has finished playing
+		if (mPlayer.isPlaying()) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(getView()
 					.getContext());
 			alert.setTitle(R.string.app_name);
-			alert.setMessage(R.string.game_over);
+			alert.setMessage(R.string.wait);
 
 			alert.setPositiveButton(R.string.ok,
 					new DialogInterface.OnClickListener() {
@@ -115,9 +160,28 @@ public class MainGameFragment extends Fragment {
 			AlertDialog alertDialog = alert.create();
 			alertDialog.show();
 		} else {
-			mPlayer = MediaPlayer.create(getView().getContext(),
-					mAudioIds.get(audioIndex));
-			mPlayer.start();
+			audioIndex++;
+			if (audioIndex >= (maxNumberOfStimuliPerGroup * numberOfGroups)) {
+				AlertDialog.Builder alert = new AlertDialog.Builder(getView()
+						.getContext());
+				alert.setTitle(R.string.app_name);
+				alert.setMessage(R.string.game_over);
+
+				alert.setPositiveButton(R.string.ok,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int whichButton) {
+								dialog.cancel();
+								goToResultsScreen();
+							}
+						});
+				AlertDialog alertDialog = alert.create();
+				alertDialog.show();
+			} else {
+				mPlayer = MediaPlayer.create(getView().getContext(),
+						mAudioIds.get(audioIndex));
+				mPlayer.start();
+			}
 		}
 	}
 
@@ -130,6 +194,14 @@ public class MainGameFragment extends Fragment {
 			ar[index] = ar[i];
 			ar[i] = a;
 		}
+	}
+
+	public void goToResultsScreen() {
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ResultsScreenFragment fb = new ResultsScreenFragment();
+		ft.replace(R.id.main_fragment_container, fb, "ResultsScreenFragment");
+		ft.addToBackStack(null);
+		ft.commit();
 	}
 
 	@Override
