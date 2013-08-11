@@ -7,17 +7,17 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/main_title"
+        android:id="@+id/main_game_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/procedures"
+        android:text="@string/main_game_title"
         android:textColor="#FFFFFF"
         android:textSize="16sp" />
 
     <Button
-        android:id="@+id/start_game_button"
+        android:id="@+id/next_audio_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/start_game" />
+        android:text="@string/next" />
 
 </LinearLayout>

@@ -1,8 +1,12 @@
+# Ignore gradle files
+*gradle*
+
 # Private Constants
 PrivateConstants.java
 
 # Audio files
 *.wav
+*.mp3
 
 # Package Files #
 *.jar
