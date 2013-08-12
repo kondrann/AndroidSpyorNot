@@ -24,8 +24,9 @@ public class MainGameFragment extends Fragment {
 
 	private ArrayList<Integer> mAudioIds;
 	private int audioIndex;
-	private int maxNumberOfStimuliPerGroup = 1;
+	private int maxNumberOfStimuliPerGroup = 4;
 	private int numberOfGroups = 3;
+	private ArrayList<Integer> spiesOnBus = new ArrayList<Integer>();
 	MediaPlayer mPlayer;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,16 +83,26 @@ public class MainGameFragment extends Fragment {
 		// audio files, as well as re-initializing the MediaPlayer so it is not
 		// null
 		if (savedInstanceState != null) {
+			spiesOnBus = savedInstanceState.getIntegerArrayList("spiesOnBus");
 			audioIndex = savedInstanceState.getInt("audioIndex");
 			mAudioIds = savedInstanceState.getIntegerArrayList("mAudioIds");
 			mPlayer = MediaPlayer.create(view.getContext(),
 					mAudioIds.get(audioIndex));
+			showHideSpies(view, audioIndex);
 		} else {
+			// Get resource IDs for Spies on Bus
+			for (int i = 0; i < 12; i++) {
+				String spiesOnBusId = "spy_on_bus" + (i + 1);
+				int resId = getResources().getIdentifier(spiesOnBusId, "id",
+						view.getContext().getPackageName());
+				spiesOnBus.add(i, resId);
+			}
 			audioIndex = 0;
 			mAudioIds = initializeRandomizedAudioStimuli();
 			mPlayer = MediaPlayer.create(view.getContext(),
 					mAudioIds.get(audioIndex));
 			mPlayer.start();
+			showHideSpies(view, audioIndex);
 		}
 
 		return view;
@@ -181,10 +192,18 @@ public class MainGameFragment extends Fragment {
 				mPlayer = MediaPlayer.create(getView().getContext(),
 						mAudioIds.get(audioIndex));
 				mPlayer.start();
+				showHideSpies(getView(), audioIndex);
 			}
 		}
 	}
 
+	public void showHideSpies(View view, int index) {
+		for (int i = 0; i <= index; i++) {
+			ImageView showSpy = (ImageView) view.findViewById(spiesOnBus.get(i));
+			showSpy.setVisibility(View.VISIBLE);
+		}
+	}
+	
 	static void shuffleArray(int[] ar) {
 		Random rnd = new Random();
 		for (int i = ar.length - 1; i >= 0; i--) {
@@ -209,5 +228,6 @@ public class MainGameFragment extends Fragment {
 		super.onSaveInstanceState(outState);
 		outState.putInt("audioIndex", audioIndex);
 		outState.putIntegerArrayList("mAudioIds", mAudioIds);
+		outState.putIntegerArrayList("spiesOnBus", spiesOnBus);
 	}
 }
