@@ -3,6 +3,19 @@
 
     <string name="app_name">SpyOrNot</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="step1">Intro</string>
+    <string name="step2">Test</string>
+    <string name="step3">Results</string>
+    <string name="procedures">So you think you can make for a good spy\? We will be testing your skills to make sure you can do good work for our organization. Let\'s see how you are at detecting accents.\n\nHere is your mission. You will get on bus number 7 without attracting any attention from other passengers. At each stop, a new passenger will get on the bus, approach you, and speak one sentence to you. This sentence will be a code, so pay attention closely even to simple sentences like \'This boat is huge\'. Your mission is to assess whether this person is from Russia or not based on the way they pronounce the sentence.\n\nWe will provide you with a report on your progress every 15th stop.\n\nNow get on the bus and don\'t forget we are watching you!</string>
+    <string name="start_game">Get on the bus!</string>
+    <string name="ready">Ready?</string>
+    <string name="ok">OK</string>
+    <string name="main_game_title">Spy or Not</string>
+    <string name="wait">Slow down there, buddy!</string>
+    <string name="is_a_spy">Spy!</string>
+    <string name="is_not_a_spy">NOT a Spy!</string>
+    <string name="game_over">Game Over</string>
+    <string name="results_screen_title">Results</string>
+    <string name="start_over">Play Again</string>
 
 </resources>

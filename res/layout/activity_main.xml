@@ -5,20 +5,18 @@
     android:orientation="horizontal"
     android:background="#000000" >
 
-    <fragment
-        android:id="@+id/mainPageFragment"
+    <FrameLayout
+        android:id="@+id/main_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="30"
-        class="org.ilanguage.spyornot.perception.mainPageFragment" >
-    </fragment>
+        android:layout_weight="30" />
 
     <fragment
-        android:id="@+id/mainMenuFragment"
+        android:id="@+id/main_menu_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="70"
-        class="org.ilanguage.spyornot.perception.mainMenuFragment" >
+        class="org.ilanguage.spyornot.perception.MainMenuFragment" >
     </fragment>
 
 </LinearLayout>
